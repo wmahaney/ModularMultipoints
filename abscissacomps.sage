@@ -1,4 +1,5 @@
 #written in sagemath 10.3
+#THIS CODE IS NOT READY TO BE USED
 #TEST CODE: Purpose is to extend method for computing normalized codomain models
     #to give a method to compute abscissa of isogenies.
 
