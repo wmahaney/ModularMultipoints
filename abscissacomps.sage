@@ -23,27 +23,33 @@ def isogenous_curves(j1,j2,ell,m, model=None):
 
 def abssingle(j1,j2,ell):
     #code to test abscissa formula on smooth points
+    # based on pseudocode of Sutherland from Steven Galbraith's ``Mathematics of Public Key Cryptography,'' Chapter 25, pg555 https://www.math.auckland.ac.nz/~sgal018/crypto-book/ch25.pdf
     K = j1.parent(); R.<x,y> = K[]
     E1 = EllipticCurve_from_j(j1)
     A = E1.a4(); B = E1.a6()
-    j1prime = 18*(B/A)*j1
-    DB = ClassicalModularPolynomialDatabase(); Phi = DB[ell]; Phi = R(Phi)
+    DB = ClassicalModularPolynomialDatabase(); 
+    Phi = DB[ell]; Phi = R(Phi)
     Phix = derivative(Phi,x,1,y,0); Phiy = derivative(Phi,x,0,y,1);
-    j2prime = (-j1prime*Phix(j1,j2))/(K(ell)*Phiy(j1,j2))
-    Atilde = (  -j2prime^2)/(K(48)*j2*(j2-K(1728))); Btilde = ( -j2prime^3)/(K(864)*j2^2*(j2-K(1728)))
-    model = [K(ell)^4*Atilde, K(ell)^6*Btilde]
+    m = 18*B/A
+    j1prime = m*j1
+    k = j1prime/(1728-j1)
+    j2prime = (-j1prime * Phix(j1,j2)) / (ell * Phiy(j1,j2))
+    m2 = j2prime / j2
+    k2 = j2prime / (1728 - j2)
+    Atilde = ell^4 * m2 * k2 / 48 
+    Btilde = ell^6 * m2^2 * k2 / 864
+    model = [Atilde, Btilde]
     Phix2 = derivative(Phi,x,2,y,0); Phixy = derivative(Phi,x,1,y,1); Phiy2 = derivative(Phi,x,0,y,2);
     #get the difference of log derivatives j''/j' - ell jt''/jt'
-    logderivdiff = (j1prime^2*Phix2(j1,j2)+K(2*ell)*j1prime*j2prime*Phixy(j1,j2)*K(ell)^2*j2prime^2*Phiy2(j1,j2))/(K(ell)*j2prime*Phiy(j1,j2))
-    G4 = -48*A; G6 = 864*B; G4tilde = -48*Atilde; G6tilde = 864*Btilde;
-    abscissa = K(ell/2)*(logderivdiff + K(1/2)*(G4^2/G6 - K(ell/2)*G4tilde^2/G6tilde) + K(2/3)*(G6/G4 - K(ell)*G6tilde/G4tilde )  )
-    return model, abscissa
+    logderivdiff = -(j1prime^2 * Phix2(j1,j2) + 2 * ell * j1prime * j2prime * Phixy(j1,j2) + ell^2 * j2prime^2 * Phiy2(j1,j2)) / (j1prime * Phix(j1,j2))
+    # G4 = -48*A; G6 = 864*B; G4tilde = -48*Atilde; G6tilde = 864*Btilde;
+    p1 = ell * (logderivdiff/2 + (k - ell * k2)/4 + (ell * m2 - m)/3)
+    return EllipticCurveIsogeny(E1,None,EllipticCurve(model),ell), p1
 
 def singleabstest():
-    p = 137; ell = 2; K.<w> = GF(p^2); j1 = K(136); j2 = K(78); model,abscissa = abssingle(j1,j2, ell);
-    E = EllipticCurve_from_j(j1); Etilde = EllipticCurve(K, [model[0], model[1]]); phi = EllipticCurveIsogeny(E, None, Etilde, ell);
+    p = 137; ell = 2; K.<w> = GF(p^2); j1 = K(136); j2 = K(78); model,abscissa = abssingle(j1,j2, ell);E = EllipticCurve_from_j(j1); Etilde = EllipticCurve(K, [model[0], model[1]]); phi = EllipticCurveIsogeny(E, None, Etilde, ell);
     print(phi.kernel_polynomial())
-    print(-K(1/2)*abscissa)
+    print(abscissa)
 
 
 def absdouble(j1,j2,ell,m,model=None):
