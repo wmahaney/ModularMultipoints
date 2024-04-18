@@ -23,6 +23,7 @@ def isogenous_curves(j1,j2,ell,m, model=None):
 
 def abssingle(j1,j2,ell):
     #code to test abscissa formula on smooth points
+    #requires l>2
     # based on pseudocode of Sutherland from Steven Galbraith's ``Mathematics of Public Key Cryptography,'' Chapter 25, pg555 https://www.math.auckland.ac.nz/~sgal018/crypto-book/ch25.pdf
     K = j1.parent(); R.<x,y> = K[]
     E1 = EllipticCurve_from_j(j1)
