@@ -47,48 +47,45 @@ def abssingle(j1,j2,ell):
     p1 = ell * (logderivdiff/2 + (k - ell * k2)/4 + (ell * m2 - m)/3)
     return EllipticCurveIsogeny(E1,None,EllipticCurve(model),ell), p1
 
-def singleabstest():
-    p = 137; ell = 2; K.<w> = GF(p^2); j1 = K(136); j2 = K(78); model,abscissa = abssingle(j1,j2, ell);E = EllipticCurve_from_j(j1); Etilde = EllipticCurve(K, [model[0], model[1]]); phi = EllipticCurveIsogeny(E, None, Etilde, ell);
-    print(phi.kernel_polynomial())
-    print(abscissa)
-
-
-def absdouble(j1,j2,ell,m,model=None):
-    """Intake a double point (j1,j2) of Phi and returns the normalized codomain models for the isogenies j1 to j2 as well as the abscissa of the isogenies."""
-    #old code for the models
+def absdouble(j1,j2,ell, model=False):
+    #requires l>2. Assumes (j1,j2) is a double point of Phi_ell
+    """Intakes a double point (j1,j2) of the ellth modular polynomial"""
     K = j1.parent(); R.<x,y> = K[]
-    if model == None:
-        E1 = EllipticCurve_from_j(j1)
+    if model:
+        E1 = EllipticCurve(K, model)
     else:
-        E1 = EllipticCurve(K, [K(model[0]), K(model[1])])
-    A = E1.a4(); B = E1.a6()
-    j1prime = 18*(B/A)*j1
+        E1 = EllipticCurve_from_j(j1)
+    A = E1.a4(); B = E1.a6();
+    #Ideally the next few lines could be replaced with a faster loading method
     DB = ClassicalModularPolynomialDatabase(); Phi = DB[ell]; Phi = R(Phi)
-    #First we need to compute the fiber polynomial for (j1,j2)
-    Rt.<t> = K[]; F_P = 0
-    for u in range(0,m+1):
-        Phideriv = derivative(Phi, x, u, y, m-u)
-        F_P += K(binomial(m,u))*K(j1prime)^(u)*K(ell)^(m-u)*Phideriv(j1,j2)*t^(m-u)
-    solutions = [r[0] for r in F_P.roots()]
-    models = []
-    for r in solutions:
-        Atilde = ( -r^2)/(K(48)*j2*(j2-K(1728))); Btilde = ( -r^3)/(K(864)*j2^2*(j2-K(1728)))
-        models.append((K(ell)^4*Atilde,K(ell)^6*Btilde))
-    #new code
-    Phiy3 = derivative(Phi,x,0,y,3); Phixy2 = derivative(Phi,x,1,y,2); Phix2y = derivative(Phi,x,2,y,1); Phix3 = derivative(Phi,x,3,y,0);
-    Phiy2 = derivative(Phi,x,0,y,2); Phixy = derivative(Phi,x,1,y,1); Phix2 = derivative(Phi,x,2,y,0);
-    abscissas = []
-    for r in solutions:
-        Atilde = ( -r^2)/(K(48)*j2*(j2-K(1728))); Btilde = ( -r^3)/(K(864)*j2^2*(j2-K(1728)))
-        #compute the 3rd fiber function evaluated at j1,r
-        F3 = j1prime^3*Phix3(j1,j2)+K(3)*K(ell)*j1prime^2*r*Phix2y(j1,j2)+K(3)*K(ell)^2*j1prime*r^2*Phixy2(j1,j2)+K(ell)^3*r^3*Phiy3(j1,j2)
-        #compute the difference j''/j' - ell jt''/jt'
-        logderivdiff = -F3/(K(3)*Phiy2(j1,j2) + K(3)*ell*j1prime*r*Phixy(j1,j2))
-        #compute the abscissa
-        G4 = K(-48)*A; G6 = K(864)*B; G4tilde = K(-48)*Atilde; G6tilde = K(864)*Btilde
-        absc = K(ell/2)*logderivdiff+K(ell/4)*(G4^2/G6 - K(ell)*G4tilde^2/G6tilde) + K(ell/3)*(G6/G4 - K(ell)*G6tilde/G4tilde);
-        abscissas.append(absc)
-    return models, abscissas
+    Phix = derivative(Phi,x,1,y,0); Phiy = derivative(Phi,x,0,y,1);
+    Phix2 = derivative(Phi,x,2,y,0); Phixy = derivative(Phi,x,1,y,1); Phiy2 = derivative(Phi,x,0,y,2);
+    Phix3 = derivative(Phi,x,3,y,0); Phix2y = derivative(Phi,x,2,y,1); Phixy2 = derivative(Phi,x,1,y,2); Phiy3 = derivative(Phi,x,0,y,3);
+    #initialize modular parameters
+    m1 = 18*B/A #-G6/G4
+    j1prime = m1*j1 #-j*G6/G4
+    k1 = j1prime/(1728-j1) #G4^2/G6
+    #We need to solve for the normalized codomain model
+    Kt.<t> = K[]; F2 = j1prime^2*Phix2(j1,j2)+2*ell*j1prime*Phixy(j1,j2)*t+ell^2*Phiy2(j1,j2)*t^2;
+    roots = [r[0] for r in F2.roots()]
+    maps = []; abscissas = [];
+    for j2prime in roots:
+        m2 = j2prime/j2 #1/ell * -G6tilde/G4tilde
+        k2 = j2prime/(1728-j2) #G4tilde^2/G6
+        Atilde = ell^4*m2*k2/48; Btilde = ell^6*m2^2*k2/864
+        F3 = j1prime^3*Phix3(j1,j2)+3*ell*j1prime^2*j2prime*Phix2y(j1,j2)+3*ell^2*j1prime*j2prime^2*Phixy2(j1,j2)*ell^3*j2prime^3*Phiy3(j1,j2)
+        logderivdiff = -F3/(3*Phiy2(j1,j2)+3*ell*j1prime*j2prime*Phixy(j1,j2))
+        p1 = ell*(logderivdiff/2 + (k1-ell*k2)/4 + 2*(ell*m2-m1)/3)
+        Etilde = EllipticCurve(K, [Atilde, Btilde]); phi = EllipticCurveIsogeny(E1, None, Etilde, ell);
+        maps.append(phi); abscissas.append(p1)
+    return maps, abscissas
+
+
+#Test Functions
+def singleabstest():
+    p = 137; ell = 5; K.<w> = GF(p^2); j1 = K(22); j2 = 43*w+130; phi, p1 = abssingle(j1,j2, ell);
+    print(phi.kernel_polynomial())
+    print(-p1/2)
 
 def example1():
     p=137; ell = 5; K.<w> = GF(p^2); j1 = 43*w+130; j2 = 120*w+100; E = EllipticCurve_from_j(j1); #double from j1 to j2
@@ -110,4 +107,3 @@ def example3():
     for isog in maps:
         print(isog.codomain())
         print(isog.is_normalized())
-
