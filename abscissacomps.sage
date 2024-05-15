@@ -18,8 +18,8 @@ def isogenous_curves(j1,j2,ell,m, model=None):
     models = []
     for r in solutions:
         Atilde = ( -K(ell^4) * r^2)/(K(48)*j2*(j2-K(1728))); Btilde = ( -K(ell^6) * r^3)/(K(864)*j2^2*(j2-K(1728)))
-        out.append((Atilde,Btilde))
-    return out
+        models.append((Atilde,Btilde))
+    return models
 
 def abssingle(j1,j2,ell):
     #code to test abscissa formula on smooth points
@@ -74,10 +74,12 @@ def absdouble(j1,j2,ell, model=False):
         k2 = j2prime/(1728-j2) #G4tilde^2/G6
         Atilde = ell^4*m2*k2/48; Btilde = ell^6*m2^2*k2/864
         F3 = j1prime^3*Phix3(j1,j2)+3*ell*j1prime^2*j2prime*Phix2y(j1,j2)+3*ell^2*j1prime*j2prime^2*Phixy2(j1,j2)+ell^3*j2prime^3*Phiy3(j1,j2)
-        logderivdiff = F3/(2*ell^2*j2prime^2*Phiy2(j1,j2)+2*ell*j1prime*j2prime*Phixy(j1,j2))
+        logderivdiff = F3/(3*(ell^2*j2prime^2*Phiy2(j1,j2)+ell*j1prime*j2prime*Phixy(j1,j2)))
         p1 = ell*(logderivdiff/2 + (k1-ell*k2)/4 + (ell*m2-m1)/3)
         Etilde = EllipticCurve(K, [Atilde, Btilde]); phi = EllipticCurveIsogeny(E1, None, Etilde, ell);
         maps.append(phi); abscissas.append(p1)
+        kerpol = phi.kernel_polynomial()
+        assert kerpol[kerpol.degree()-1] == -p1/2
     return maps, abscissas
 
 
