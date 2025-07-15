@@ -67,7 +67,7 @@ def fast_elkies(E1, E2, l, sigma):
     # Released under the MIT license: https://github.com/remyoudompheng/isogeny_weber/blob/64289127a337ac1bf258b711e02fea02b7df5275/LICENSE
     # Slightly adjusted for inclusion in the Sage library.
     # Updated to run FastElkies rather than FastElkies' for odd ell. 
-    if ell % 2 == 0:
+    if l % 2 == 0:
         raise ValueError('l must be odd')
     if E1.a1() or E1.a2() or E1.a3():
         raise ValueError('E1 must be a short Weierstrass curve')
@@ -112,12 +112,47 @@ def fast_elkies(E1, E2, l, sigma):
     # Reconstruct N(1/x) / D(1/x) = U
     T = Rx([S[2 * i + 1] for i in range((l+1)//2)])
     U = T._mul_trunc_(T, (l+1)//2).inverse_series_trunc((l+1)//2)
-    # h = [U.coefficient(i+2) for i in range(l)]
     h = U.list()[1:]
     d = (l-1)//2
     q = [d, sigma / 2]
     for i in range(1,(l-1)//2):
         q.append(h[i]/(4*i+2) - (2*i-1)*A*q[i-1]/(2*i+1) - (2*i-2)*B*q[i-2]/(2*i+1))
+        # q.append((h[i] - (4*i-2)*A*q[i-1] - (4*i-4)*B*q[i-2])/(4*i+2))
     g = Rx([0] + [-q[i] / i for i in range(1,d+1)])
-    g = (g.add_bigoh(d+1).exp().truncate(d+1)).reverse()
+    # g = (g.add_bigoh(d+1).exp().truncate(d+1)).reverse()
+    # the above should work but seems to fail for larger degree isogenies.
+    g = poly_exp(g, d+1).reverse()
     return g
+def poly_exp(f,n):
+    R = f.parent()
+    if f == 0:
+        return R(1)
+    g = R(1)
+    i = 1
+    while i < n:
+        i = 2*i
+        h = 1 + f - poly_log(g, i)
+        g = g.multiplication_trunc(h, i)
+    return g.truncate(n)
+
+
+# Calculats the logarithm of f to n terms
+#
+# Inputs:
+#     f: An element of F[x] satisfying f(0)=1, where F is the finite field of size p^2
+#     n: A positive integer such that n < p
+# Outputs:
+#     log_f: The logarithm of f in F[[x]] truncated to n terms
+#
+# Runs in O(n M(log p) llog p + M(n log p))
+#
+# Source [2]
+def poly_log(f, n):
+    R = f.parent()
+    x = R.gen()
+
+    f_prime = f.derivative()
+    a = reciprocal(f, n-1)
+    log_f = f_prime.multiplication_trunc(a, n-1)
+    log_f = log_f.integral()
+    return log_f
