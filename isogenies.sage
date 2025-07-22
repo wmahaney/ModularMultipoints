@@ -123,6 +123,16 @@ def fast_elkies(E1, E2, l, sigma):
     # the above should work but seems to fail for larger degree isogenies.
     g = poly_exp(g, d+1).reverse()
     return g
+
+def reciprocal(f, n):
+    R = f.parent()
+    h = R(f.coefficients()[0]^(-1))
+    i = 1
+    while i < n:
+        i = 2*i
+        h = (h*(2-f*h)).truncate(i)
+    return h.truncate(n)
+
 def poly_exp(f,n):
     R = f.parent()
     if f == 0:
