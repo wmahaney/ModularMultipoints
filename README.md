@@ -1,5 +1,7 @@
 # ModularMultipoints
-This repository contains Sage code to compute normalized codomain models for elliptic curves which admit multiple ell isogenies from another elliptic curve.
+This repository contains Sage code to compute isogenies between elliptic curves E1, E2 that have multiple distinct l-isogenies connecting them. 
 
-Usage of the sage code requires the Kohel database https://repology.org/project/sage-data-kohel/versions. If you are unable to install the Kohel database you can use cocalc to run the program.
+Requires Sage to be upgraded to 10.6 or higher to use classical_modular_polynomial(l) command. 
+
+## Main Functions
 
