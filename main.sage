@@ -160,7 +160,6 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=False):
     for key, val in isogeny_data:
         isogenies.append(val['isogeny']) 
 
+    return isogeny_data, isogenies
 
-
-    return mult 
 
