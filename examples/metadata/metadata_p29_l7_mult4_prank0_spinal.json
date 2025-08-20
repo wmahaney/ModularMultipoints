@@ -1,0 +1,52 @@
+{
+    "k": "Finite Field in w of size 29^2",
+    "k_minimal_polynomial": "x^2 + 24*x + 2",
+    "p": "29",
+    "l": "7",
+    "j1": "2",
+    "j2": "25",
+    "multiplicity": "4",
+    "domain_curve": "Elliptic Curve defined by y^2 = x^3 + 3*x + 28 over Finite Field in w of size 29^2",
+    "p_rank": "0",
+    "fiber_polynomial": "25*t^4 + 8*t^3 + 18*t + 16",
+    "splitting_field": "Finite Field in z of size 29^2",
+    "splitting_field_minimal_polynomial": "x^2 + 24*x + 2",
+    "isogeny_data": {
+        "18*w + 10": {
+            "model": [
+                "19*w + 18",
+                "17*w + 24"
+            ],
+            "codomain_curve": "Elliptic Curve defined by y^2 = x^3 + (19*w+18)*x + (17*w+24) over Finite Field in w of size 29^2",
+            "abscissa": "11*w + 18",
+            "kernel_polynomial": "x^3 + (9*w + 20)*x^2 + (15*w + 12)*x + 7*w + 17"
+        },
+        "15*w + 10": {
+            "model": [
+                "24*w + 17",
+                "15*w + 11"
+            ],
+            "codomain_curve": "Elliptic Curve defined by y^2 = x^3 + (24*w+17)*x + (15*w+11) over Finite Field in w of size 29^2",
+            "abscissa": "13*w + 13",
+            "kernel_polynomial": "x^3 + (8*w + 8)*x^2 + (4*w + 20)*x + 14*w + 16"
+        },
+        "14*w + 27": {
+            "model": [
+                "5*w + 21",
+                "14*w + 28"
+            ],
+            "codomain_curve": "Elliptic Curve defined by y^2 = x^3 + (5*w+21)*x + (14*w+28) over Finite Field in w of size 29^2",
+            "abscissa": "16*w + 20",
+            "kernel_polynomial": "x^3 + (21*w + 19)*x^2 + (25*w + 11)*x + 15*w + 28"
+        },
+        "11*w + 13": {
+            "model": [
+                "10*w + 26",
+                "12*w + 22"
+            ],
+            "codomain_curve": "Elliptic Curve defined by y^2 = x^3 + (10*w+26)*x + (12*w+22) over Finite Field in w of size 29^2",
+            "abscissa": "18*w + 15",
+            "kernel_polynomial": "x^3 + (20*w + 7)*x^2 + 14*w*x + 22*w + 23"
+        }
+    }
+}
