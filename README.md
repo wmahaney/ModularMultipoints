@@ -12,10 +12,20 @@ Based on "Computing Isogenies at Singular Points of the Modular Polynomial" by W
 4) To reset the PROJECT_ROOT if you move the git repo in your computer run ```make``` from the repo home directory. 
 5) To remove the PROJECT_ROOT files and /examples/metadata files run ```make uninstall``` from the repo home directory. 
 
-# Functions
+# Primary Functions
 
-# main.sage
+## main.sage
+- ```isogeny_data, isogenies = multipoint_isogeny(j1, j2, l, mult = None, model = None)```
 
 ## elkies_isogeny.sage 
+- ```f = fast_elkies(E1, E2, l, sigma)```
 
 # Examples 
+- ```run_all.sage```
+  Runs all example files. 
+- ```p29_l7_mult4_prank0_spinal.sage```
+  A pair of supersingular elliptic curves with $j$-invariants in $\mathbb{F}_{29}$ connected by 4 distinct 7-isogenies.
+- ```p37_l5_mult2_prank1_spinal.sage```
+  A pair of ordinary elliptic curves with $j$-invariants in $\mathbb{F}_{37}$ connected by 2 distinct 5-isogenies.
+- ```p47_l5_mult2_prank0_spinal.sage```
+  A pair of supersingular elliptic curves with $j$ invariants in $\mathbb{F}_{47}$ connected by 2 distinct 5-isogenies.
