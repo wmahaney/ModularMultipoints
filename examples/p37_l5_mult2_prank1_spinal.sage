@@ -2,10 +2,19 @@
 A pair of ordinary elliptic curves connected by 2 distinct 5-isogenies.
 """
 
+import os 
+import sys
 import csv
 import json
-import os
-load("../elkies_isogeny.sage")
+
+#main.sage 
+ex_dir=os.path.dirname(os.path.abspath("p29_l7_mult4_prank0_spinal.sage"))
+root_file = os.path.join(ex_dir, "PROJECT_ROOT")
+
+with open(root_file, 'r') as f:
+    PROJECT_ROOT= f.read().strip()
+
+load(os.path.join(PROJECT_ROOT, "main.sage"))
 
 p=37
 l=5
@@ -96,58 +105,13 @@ metadata['splitting_field'] = str(L)
 metadata['splitting_field_minimal_polynomial'] = str(L.modulus())
 
 
-
-fiber_poly_ddt =fiber_poly.derivative(t)
-
-roots_data = [r[0] for r in fiber_poly.roots()]
-isogeny_data = {}
-for r in roots_data:
-    datum={}
-    Atilde = ( -l^4 * r^2)/(48*j2*(j2-1728))
-    Btilde = (-l^6 * r^3)/(864*j2^2*(j2-1728))
-    model= [Atilde, Btilde]
-    datum['model']=model
-    Etilde_r = EllipticCurve(k, model)
-    datum['codomain_curve'] = str(Etilde_r)
-
-    fiber_function_multplus1 = 0
-    for u in range(0, mult+2):
-        fiber_function_multplus1 += binomial(mult+1, u) * l^(mult+1-u) * j1prime^u * derivative_evals[(u, mult+1-u)] * r^(mult+1-u)
-    #now we take the derivative of the fiber polynomial evaluated at our fixed model Atilde, Btilde
-    fiber_poly_ddt = derivative(fiber_poly, t, 1); fiber_poly_ddt = fiber_poly_ddt(r);
-    if fiber_poly_ddt == 0:
-    #If we found a root corresponding to multiple models we need to abort now because our later abscissa formula
-        #will involve division by 0
-        """
-        In this case our formula for the abscissa fails but one can still use ELlipticCurveIsogeny(E, None, Etilde_r, l) to compute the isogeny. We make the abscissa None to indicate something went wrong
-        """
-        phi = EllipticCurveIsogeny(E, None, Etilde_r, l)
-        datum['isogeny_abscissa'] = None
-        datum['isogeny_kernel_polynomial'] = phi.kernel_polynomial()
-        isogeny_data[r] = datum
-        continue
-    #now compute the difference of logarithmic derivatives given by our formula
-    log_deriv_diff = mult/r * fiber_function_multplus1/( binomial(mult+1, mult-1) * fiber_poly_ddt )
-    #now use Drew's formula to recover the absicca
-    m1 = 18*B/A; n1 = j1prime/(1728-j1)
-    m2 = r/j2; n2 = r/(1728-j2) 
-    abscissa = l * (log_deriv_diff/2 + (n1 - l*n2)/4 + (l*m2 - m1)/3 )
-
-    #now use Fast Elkies to compute the kernel polynomial
-    kernel_poly = fast_elkies(E, Etilde_r, l, abscissa)
-    datum['abscissa'] = abscissa
-    datum['kernel_polynomial'] = str(kernel_poly)
-
-    #assert that our algorithm worked
-    phi = EllipticCurveIsogeny(E, kernel_poly)
-    assert phi.codomain() == Etilde_r 
-
-    isogeny_data[r]=datum 
-
+isogeny_data, _ = multipoint_isogeny(j1,j2,l)
 metadata['isogeny_data'] = isogeny_data
 
-output_dir = "./metadata"
+
+output_dir = os.path.join(str(PROJECT_ROOT), "examples", "metadata")
 os.makedirs(output_dir, exist_ok=True) 
+
 
 # Construct filename from metadata
 p_val = metadata['p']

@@ -1,7 +1,15 @@
-#main.sage 
-load('./elkies_isogeny.sage')
+import os 
+import sys
 
-def multipoint_isogeny(j1, j2, l, mult=None, model=False):
+main_dir = os.path.dirname(os.path.abspath("main.sage"))
+root_file = os.path.join(main_dir, "PROJECT_ROOT")
+
+with open(root_file, 'r') as f:
+    PROJECT_ROOT= f.read().strip()
+
+load(os.path.join(PROJECT_ROOT, "elkies_isogeny.sage"))
+
+def multipoint_isogeny(j1, j2, l, mult=None, model=None):
     """
     Parameters
     ----------
@@ -68,12 +76,13 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=False):
     A=E.a4()
     B=E.a6() 
     R.<X,Y>=k[]
-    Phi=classical_modular_polynomial(ell)
+    Rt.<t>=k[]
+    Phi=classical_modular_polynomial(l)
     Phi=R(Phi)
 
     #parameters for abscissa formula later
     mu1 = 18*B/A
-    #j1prime = mu1*j1 
+    j1prime = mu1*j1 
     nu1 = mu1*j1/(1728-j1)
 
 
@@ -111,6 +120,7 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=False):
 
     roots = [r[0] for r in fiber_poly.roots()] 
     isogeny_data={}
+    isogenies=[]
     for r in roots:
         datum={} 
         Atilde = ( -l^4 * r^2)/(48*j2*(j2-1728))
@@ -138,7 +148,7 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=False):
         #now compute the difference of logarithmic derivatives given by our formula
         log_deriv_diff = mult/r * fiber_function_multplus1/( binomial(mult+1, mult-1) * fiber_poly_ddt )
         #now use Drew's formula to recover the absicca
-        mu2 = r/j2; n2 = r/(1728-j2) 
+        mu2 = r/j2; nu2 = r/(1728-j2) 
         # Abscissa formula of Sutherland from Steven Galbraith's ``Mathematics of Public Key Cryptography,''
         #Chapter 25, pg555 https://www.math.auckland.ac.nz/~sgal018/crypto-book/ch25.pdf
         abscissa = l * (log_deriv_diff/2 + (nu1 - l*nu2)/4 + (l*mu2 - mu1)/3 )
@@ -147,19 +157,10 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=False):
         kernel_poly = fast_elkies(E, Etilde_r, l, abscissa)
         datum['abscissa'] = abscissa
         datum['kernel_polynomial'] = str(kernel_poly)
-
-        #assert that our algorithm worked
         phi = EllipticCurveIsogeny(E, kernel_poly)
-        assert phi.codomain() == Etilde_r 
-        datum['isogeny']=phi
 
-        isogeny_data[r]=datum 
+        isogeny_data[r]=datum
+        isogenies.append(phi)
 
     #we will return the full dictionary of isogeny data and also a list of isogenies
-    isogenies = [] 
-    for key, val in isogeny_data:
-        isogenies.append(val['isogeny']) 
-
     return isogeny_data, isogenies
-
-

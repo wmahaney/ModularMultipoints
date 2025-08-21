@@ -2,11 +2,19 @@
 A pair of supersingular elliptic curves connected by 2 distinct 5-isogenies.
 """
 
-
+import os 
+import sys
 import csv
 import json
-import os
-load("../elkies_isogeny.sage")
+
+#main.sage 
+ex_dir=os.path.dirname(os.path.abspath("p29_l7_mult4_prank0_spinal.sage"))
+root_file = os.path.join(ex_dir, "PROJECT_ROOT")
+
+with open(root_file, 'r') as f:
+    PROJECT_ROOT= f.read().strip()
+
+load(os.path.join(PROJECT_ROOT, "main.sage"))
 
 p=47
 l=5
@@ -151,7 +159,7 @@ for r in roots_data:
 
 metadata['isogeny_data'] = isogeny_data
 
-output_dir = "./metadata"
+output_dir = os.path.join(str(PROJECT_ROOT), "examples", "metadata")
 os.makedirs(output_dir, exist_ok=True) 
 
 # Construct filename from metadata
