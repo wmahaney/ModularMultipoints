@@ -11,9 +11,6 @@ import json
 ex_dir=os.path.dirname(os.path.abspath("p29_l7_mult4_prank0_spinal.sage"))
 root_file = os.path.join(ex_dir, "PROJECT_ROOT")
 
-if not os.path.exists(root_file):
-    raise FileNotFoundError("You must install PROJECT_ROOT by running make.")
-
 with open(root_file, 'r') as f:
     PROJECT_ROOT= f.read().strip()
 
