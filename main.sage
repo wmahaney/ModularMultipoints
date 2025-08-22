@@ -1,8 +1,11 @@
 import os 
 import sys
 
-main_dir = os.path.dirname(os.path.abspath("main.sage"))
+main_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 root_file = os.path.join(main_dir, "PROJECT_ROOT")
+
+if not os.path.exists(root_file):
+    raise FileNotFoundError("You must install PROJECT_ROOT by running make.")
 
 with open(root_file, 'r') as f:
     PROJECT_ROOT= f.read().strip()
