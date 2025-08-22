@@ -18,7 +18,7 @@ Based on "Computing Isogenies at Singular Points of the Modular Polynomial" by W
 - ```isogeny_data, isogenies = multipoint_isogeny(j1, j2, l, mult = None, model = None)```
   Intakes a pair of $j$-invariants $j_1, j_2 \in k$ for elliptic curves over a field $k$ which is either a finite field or a subfield of $\mathbb{C}$. Optionally intakes a positive integer ```mult``` and a short Weierstrass model $(A, B)$ for an elliptic curve $E$ with $j$-invariant $j_1$; if not given ```mult``` is computed as part of the execution and ```model``` is computed by using ```E = EllipticCurve_from_j(j1)``` and coercing to a short Weierstrass model.
   
-  Outputs a dictionary ```isogeny_data``` containing an entry for each $\ell$-isogeny out of $E$ to an elliptic curve $j_1$ whose values are the codomain of the isogeny, the abscissa of the isogeny, and the kernel polynomial; ```isogenies``` is a list of the EllipticCurveIsogeny objects computed from the isogeny data. 
+  Outputs a dictionary ```isogeny_data``` containing an entry for each $\ell$-isogeny out of $E$ to an elliptic curve with $j$-invariant $j_2$ whose values are the codomain of the isogeny, the abscissa of the isogeny, and the kernel polynomial; ```isogenies``` is a list of the EllipticCurveIsogeny objects computed from the isogeny data. 
 
 ## elkies_isogeny.sage 
 - ```f = fast_elkies(E1, E2, l, sigma)```
