@@ -1,13 +1,6 @@
 import os 
 import sys
 
-main_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-root_file = os.path.join(main_dir, "PROJECT_ROOT")
-
-
-with open(root_file, 'r') as f:
-    PROJECT_ROOT= f.read().strip()
-
 load(os.path.join(PROJECT_ROOT, "elkies_isogeny.sage"))
 
 def multipoint_isogeny(j1, j2, l, mult=None, model=None):

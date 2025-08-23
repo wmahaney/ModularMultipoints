@@ -7,13 +7,6 @@ import sys
 import csv
 import json
 
-#main.sage 
-ex_dir=os.path.dirname(os.path.abspath("number-field_l3_mult2.sage"))
-root_file = os.path.join(ex_dir, "PROJECT_ROOT")
-
-with open(root_file, 'r') as f:
-    PROJECT_ROOT= f.read().strip()
-
 load(os.path.join(PROJECT_ROOT, "main.sage"))
 
 k0.<z>=QQ.extension(x^2+5)
@@ -30,6 +23,9 @@ j2 = root_data[1][0]
 
 E = EllipticCurve_from_j(j1) 
 E=E.short_weierstrass_model()
+A=E.a4()
+B=E.a6()
+j1prime = j1*18*B/A
 
 metadata = {
     "k": str(k),
@@ -38,10 +34,37 @@ metadata = {
     "j1": str(j1),
     "j2": str(j2),
     "multiplicity": str(mult),
-    "domain_curve": str(E),
-    "p_rank": 1
+    "domain_curve": str(E)
 }
 
+Phi = classical_modular_polynomial(l)
+RXY.<X,Y>=k[]
+Rt.<t>=k[]
+Phi=RXY(Phi)
+
+
+#compute derivatives evaluated at (j1, j2)
+derivative_evals = {}
+#This can be sped up instantiated modular polynomials.
+for u in range(0, mult+2):
+    for v in range(0, mult+2):
+        Phi_deriv = derivative(Phi, X, u, Y, v)
+        Phi_deriv  = Phi_deriv(j1, j2)
+        derivative_evals[(u,v)] = Phi_deriv
+
+#Compute fiber polynomial
+fiber_poly =0
+for u in range(0, mult+1):
+   fiber_poly += binomial(mult,u) * l^(mult-u) * j1prime^u * derivative_evals[(u, mult-u)] * t^(mult-u)
+
+#get the roots of the fiber polynomial and then return the associated models and abscissas
+metadata['fiber_polynomial'] = str(fiber_poly)
+
+L.<z>=fiber_poly.splitting_field()
+
+#record splitting field data for the fiber polynomial
+metadata['splitting_field'] = str(L)
+metadata['splitting_field_minimal_polynomial'] = str(L.defining_polynomial())
 
 isogeny_data, _ = multipoint_isogeny(j1,j2,l, mult=2)
 metadata['isogeny_data']=isogeny_data 
@@ -52,10 +75,9 @@ os.makedirs(output_dir, exist_ok=True)
 
 
 # Construct filename from metadata
-field_val = "Q(sqrt(-5))(sqrt(5))"
+field_val = "Q-sqrtpm5"
 l_val = metadata['l']
 mult_val = metadata['multiplicity']
-p_rank_val = metadata['p_rank']
 base_filename = f"metadata_{field_val}_l{l_val}_mult{mult_val}"
 
 # Record everything in a JSON file (sanitize all values as strings)

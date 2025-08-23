@@ -7,13 +7,6 @@ import sys
 import csv
 import json
 
-#main.sage 
-ex_dir=os.path.dirname(os.path.abspath("p29_l7_mult4_prank0_spinal.sage"))
-root_file = os.path.join(ex_dir, "PROJECT_ROOT")
-
-with open(root_file, 'r') as f:
-    PROJECT_ROOT= f.read().strip()
-
 load(os.path.join(PROJECT_ROOT, "main.sage"))
 
 p=37
