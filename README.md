@@ -66,5 +66,5 @@ Based on *Computing Isogenies at Singular Points of the Modular Polynomial* by W
   A pair of supersingular elliptic curves defined over $\mathbb{F}_{47}$ connected by 2 distinct 5-isogenies.
 
 - `number-field_l3_mult2.sage`
-  A pair of ordinary elliptic curves defined over $\mathbb{Q}(\sqrt{5}, \sqrt{-5})$ connected by 2 distinct 3-isogenies.
+  A pair of ordinary elliptic curves defined over $\mathbb{Q}(\sqrt{5}, \sqrt{-5})$ connected by 2 distinct 3-isogenies. 
       - In this example the fiber polynomial connecting $E_1$ and $E_2$ does not split over their field of definition. 
