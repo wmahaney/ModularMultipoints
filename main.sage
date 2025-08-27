@@ -152,9 +152,9 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=None):
         datum['abscissa'] = abscissa
         datum['kernel_polynomial'] = str(kernel_poly)
         phi = EllipticCurveIsogeny(E, kernel_poly)
+        datum['isogeny']=phi
 
         isogeny_data[r]=datum
-        isogenies.append(phi)
 
     #we will return the full dictionary of isogeny data and also a list of isogenies
-    return isogeny_data, isogenies
+    return isogeny_data

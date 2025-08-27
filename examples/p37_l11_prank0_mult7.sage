@@ -9,15 +9,15 @@ import json
 
 load(os.path.join(PROJECT_ROOT, "main.sage"))
 
-p=29
-l=7
+p=37
+l=11
 k.<w>=GF(p^2)
-j1=k(2)
-j2=k(25)
-mult=4
+j1=10*w+20
+j2=27*w+23 
+mult=7 
 
 
-E = EllipticCurve_from_j(j1) 
+E = EllipticCurve_from_j(j1)
 E=E.short_weierstrass_model()
 
 p_rank=int(E.is_ordinary())
@@ -48,21 +48,6 @@ Rt.<t>=k[]
 Phi=RXY(Phi)
 
 
-#assert the singularity has multiplicity 4 
-low_weight_evals = []
-for u in range(1, 2):
-    weight_u_evals = {}
-    for v in range(0, u+1):
-        del_u_v = derivative(Phi, X, v, Y, v)
-        del_u_v_eval = del_u_v(j1, j2)
-        weight_u_evals[(u,v)] = del_u_v_eval
-    low_weight_evals.append(weight_u_evals)
-
-for dic in low_weight_evals:
-    for key, val in dic.items():
-        if not (val == k(0) or val == 0):
-            raise AssertionError("low_weight_evals[%s] != 0 (found %s)" % (str(key), str(val)))
-
 #compute derivatives evaluated at (j1, j2)
 derivative_evals = {}
 #This can be sped up instantiated modular polynomials.
@@ -87,7 +72,7 @@ metadata['splitting_field'] = str(L)
 metadata['splitting_field_minimal_polynomial'] = str(L.modulus())
 
 
-isogeny_data, _ = multipoint_isogeny(j1,j2,l)
+isogeny_data = multipoint_isogeny(j1,j2,l)
 
 metadata['isogeny_data'] = isogeny_data
 

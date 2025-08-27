@@ -155,7 +155,7 @@ p_val = metadata['p']
 l_val = metadata['l']
 mult_val = metadata['multiplicity']
 p_rank_val = metadata['p_rank']
-base_filename = f"metadata_p{p_val}_l{l_val}_mult{mult_val}_prank{p_rank_val}_spinal"
+base_filename = f"metadata_p{p_val}_l{l_val}_mult{mult_val}_prank{p_rank_val}"
 
 # Record everything in a JSON file (sanitize all values as strings)
 def stringify(obj):
