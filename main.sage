@@ -121,6 +121,7 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=None):
         Btilde = (-l^6 * r^3)/(864*j2^2*(j2-1728))
         model= [Atilde, Btilde]
         Etilde_r = EllipticCurve(k, model)
+        datum['domain_curve'] = E 
         datum['codomain_curve']=Etilde_r 
 
         fiber_function_multplus1 = 0
@@ -132,11 +133,10 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=None):
         #If we found a root corresponding to multiple models we need to abort now because our later abscissa formula
             #will involve division by 0
             """
-            In this case our formula for the abscissa fails but one can still use ELlipticCurveIsogeny(E, None, Etilde_r, l) to compute the isogeny. We make the abscissa None to indicate something went wrong
+            In this case our formula for the abscissa fails. We return a None type to indicate algorithm failure without quitting out completely
             """
-            phi = EllipticCurveIsogeny(E, None, Etilde_r, l)
             datum['isogeny_abscissa'] = None
-            datum['isogeny_kernel_polynomial'] = phi.kernel_polynomial()
+            datum['isogeny_kernel_polynomial'] = None
             isogeny_data[r] = datum
             continue
         #now compute the difference of logarithmic derivatives given by our formula

@@ -2,7 +2,7 @@
 A pair of ordinary elliptic curves connected by 2 distinct 3-isogenies. In this example the fiber polynomial does not split over the base field of the elliptic curves.
 """
 
-import os 
+import os
 import sys
 import csv
 import json
