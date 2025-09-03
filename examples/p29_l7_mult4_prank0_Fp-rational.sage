@@ -47,6 +47,16 @@ RXY.<X,Y>=k[]
 Rt.<t>=k[]
 Phi=RXY(Phi)
 
+#compute derivatives evaluated at (j1, j2)
+derivative_evals = {}
+#This can be sped up instantiated modular polynomials.
+for u in range(0, mult+2):
+    for v in range(0, mult+2):
+        Phi_deriv = derivative(Phi, X, u, Y, v)
+        Phi_deriv  = Phi_deriv(j1, j2)
+        derivative_evals[(u,v)] = Phi_deriv
+
+
 #Compute fiber polynomial
 fiber_poly =0
 for u in range(0, mult+1):
