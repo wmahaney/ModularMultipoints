@@ -2,6 +2,10 @@
 A pair of supersingular elliptic curves connected by 2 distinct 5-isogenies.
 """
 
+import os 
+import sys
+import json
+
 load(os.path.join(PROJECT_ROOT, "main.sage"))
 
 p=47
@@ -15,7 +19,6 @@ mult=2
 E = EllipticCurve_from_j(j1) 
 E=E.short_weierstrass_model()
 
-p_rank = int(E.is_ordinary())
 
 metadata = {
     "k": str(k),    
@@ -26,7 +29,7 @@ metadata = {
     "j2": str(j2),
     "multiplicity": str(mult),
     "domain_curve": str(E),
-     "p_rank": p_rank 
+    "is_ordinary":  E.is_ordinary()
 }
 
 A=E.a4()
@@ -154,8 +157,7 @@ os.makedirs(output_dir, exist_ok=True)
 p_val = metadata['p']
 l_val = metadata['l']
 mult_val = metadata['multiplicity']
-p_rank_val = metadata['p_rank']
-base_filename = f"metadata_p{p_val}_l{l_val}_mult{mult_val}_prank{p_rank_val}"
+base_filename = f"metadata_p{p_val}_l{l_val}_mult{mult_val}_supersingular"
 
 # Record everything in a JSON file (sanitize all values as strings)
 def stringify(obj):

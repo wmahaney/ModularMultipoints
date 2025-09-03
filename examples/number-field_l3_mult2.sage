@@ -4,7 +4,6 @@ A pair of ordinary elliptic curves connected by 2 distinct 3-isogenies. In this 
 
 import os
 import sys
-import csv
 import json
 
 load(os.path.join(PROJECT_ROOT, "main.sage"))

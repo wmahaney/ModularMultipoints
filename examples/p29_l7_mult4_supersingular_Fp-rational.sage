@@ -4,23 +4,21 @@ A pair of supersingular elliptic curves connected by 4 distinct 7-isogenies.
 
 import os 
 import sys
-import csv
 import json
 
 load(os.path.join(PROJECT_ROOT, "main.sage"))
 
-p=37
-l=11
+p=29
+l=7
 k.<w>=GF(p^2)
-j1=10*w+20
-j2=27*w+23 
-mult=7 
+j1=k(2)
+j2=k(25)
+mult=4
 
 
-E = EllipticCurve_from_j(j1)
-E=E.short_weierstrass_model()
+E = EllipticCurve_from_j(j1) 
+E = E.short_weierstrass_model()
 
-p_rank=int(E.is_ordinary())
 
 metadata = {
     "k": str(k),    
@@ -31,7 +29,7 @@ metadata = {
     "j2": str(j2),
     "multiplicity": str(mult),
     "domain_curve": str(E),
-     "p_rank": p_rank
+     "is_ordinary": E.is_ordinary()
 }
 
 A=E.a4()
@@ -47,7 +45,6 @@ RXY.<X,Y>=k[]
 Rt.<t>=k[]
 Phi=RXY(Phi)
 
-
 #compute derivatives evaluated at (j1, j2)
 derivative_evals = {}
 #This can be sped up instantiated modular polynomials.
@@ -56,6 +53,7 @@ for u in range(0, mult+2):
         Phi_deriv = derivative(Phi, X, u, Y, v)
         Phi_deriv  = Phi_deriv(j1, j2)
         derivative_evals[(u,v)] = Phi_deriv
+
 
 #Compute fiber polynomial
 fiber_poly =0
@@ -84,8 +82,7 @@ os.makedirs(output_dir, exist_ok=True)
 p_val = metadata['p']
 l_val = metadata['l']
 mult_val = metadata['multiplicity']
-p_rank_val = metadata['p_rank']
-base_filename = f"metadata_p{p_val}_l{l_val}_mult{mult_val}_prank{p_rank_val}"
+base_filename = f"metadata_p{p_val}_l{l_val}_mult{mult_val}_supersingular"
 
 # Record everything in a JSON file (sanitize all values as strings)
 def stringify(obj):
