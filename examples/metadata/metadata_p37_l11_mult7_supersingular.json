@@ -1,0 +1,57 @@
+{
+    "k": "Finite Field in w of size 37^2",
+    "k_minimal_polynomial": "x^2 + 33*x + 2",
+    "p": "37",
+    "l": "11",
+    "j1": "10*w + 20",
+    "j2": "27*w + 23",
+    "multiplicity": "7",
+    "domain_curve": "Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2",
+    "is_ordinary": "False",
+    "fiber_polynomial": "(21*w + 34)*t^7 + (28*w + 11)*t^6 + (11*w + 31)*t^5 + (14*w + 31)*t^4 + (9*w + 17)*t^3 + (36*w + 17)*t^2 + (2*w + 30)*t + 31*w",
+    "splitting_field": "Finite Field in z of size 37^2",
+    "splitting_field_minimal_polynomial": "x^2 + 33*x + 2",
+    "isogeny_data": {
+        "32*w + 35": {
+            "domain_curve": "Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2",
+            "codomain_curve": "Elliptic Curve defined by y^2 = x^3 + (25*w+11)*x + (5*w+21) over Finite Field in w of size 37^2",
+            "sigma": "31*w + 34",
+            "kernel_polynomial": "x^5 + (3*w + 20)*x^4 + (35*w + 36)*x^3 + (13*w + 16)*x^2 + (18*w + 5)*x + w + 22",
+            "isogeny": "Isogeny of degree 11 from Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2 to Elliptic Curve defined by y^2 = x^3 + (25*w+11)*x + (5*w+21) over Finite Field in w of size 37^2"
+        },
+        "28*w + 2": {
+            "domain_curve": "Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2",
+            "codomain_curve": "Elliptic Curve defined by y^2 = x^3 + 25*w*x + (30*w+25) over Finite Field in w of size 37^2",
+            "sigma": "30*w + 23",
+            "kernel_polynomial": "x^5 + (22*w + 7)*x^4 + (6*w + 10)*x^3 + (7*w + 11)*x^2 + (25*w + 10)*x + 30*w + 10",
+            "isogeny": "Isogeny of degree 11 from Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2 to Elliptic Curve defined by y^2 = x^3 + 25*w*x + (30*w+25) over Finite Field in w of size 37^2"
+        },
+        "26*w": {
+            "domain_curve": "Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2",
+            "codomain_curve": "Elliptic Curve defined by y^2 = x^3 + (2*w+33)*x + (5*w+33) over Finite Field in w of size 37^2",
+            "sigma": "33*w + 25",
+            "kernel_polynomial": "x^5 + (2*w + 6)*x^4 + (13*w + 16)*x^3 + (22*w + 11)*x^2 + (9*w + 17)*x + 14*w + 16",
+            "isogeny": "Isogeny of degree 11 from Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2 to Elliptic Curve defined by y^2 = x^3 + (2*w+33)*x + (5*w+33) over Finite Field in w of size 37^2"
+        },
+        "26*w + 7": {
+            "domain_curve": "Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2",
+            "codomain_curve": "Elliptic Curve defined by y^2 = x^3 + (34*w+32)*x + (36*w+34) over Finite Field in w of size 37^2",
+            "sigma": "13*w + 29",
+            "kernel_polynomial": "x^5 + (12*w + 4)*x^4 + (36*w + 22)*x^3 + (27*w + 11)*x^2 + (3*w + 15)*x + 5*w + 35",
+            "isogeny": "Isogeny of degree 11 from Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2 to Elliptic Curve defined by y^2 = x^3 + (34*w+32)*x + (36*w+34) over Finite Field in w of size 37^2"
+        },
+        "8*w + 21": {
+            "domain_curve": "Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2",
+            "codomain_curve": "Elliptic Curve defined by y^2 = x^3 + (31*w+20)*x + (30*w+3) over Finite Field in w of size 37^2",
+            "sigma": "30*w + 28",
+            "kernel_polynomial": "x^5 + (22*w + 23)*x^4 + (14*w + 16)*x^3 + (32*w + 16)*x^2 + (6*w + 31)*x + 21*w + 26",
+            "isogeny": "Isogeny of degree 11 from Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2 to Elliptic Curve defined by y^2 = x^3 + (31*w+20)*x + (30*w+3) over Finite Field in w of size 37^2"
+        },
+        "2*w + 14": {
+            "domain_curve": "Elliptic Curve defined by y^2 = x^3 + (8*w+35)*x + 20*w over Finite Field in w of size 37^2",
+            "codomain_curve": "Elliptic Curve defined by y^2 = x^3 + (19*w+13)*x + (6*w+12) over Finite Field in w of size 37^2",
+            "sigma": "None",
+            "isogeny_kernel_polynomial": "None"
+        }
+    }
+}

@@ -90,7 +90,7 @@ fiber_poly =0
 for u in range(0, mult+1):
    fiber_poly += binomial(mult,u) * l^(mult-u) * j1prime^u * derivative_evals[(u, mult-u)] * t^(mult-u)
 
-#get the roots of the fiber polynomial and then return the associated models and abscissas
+#get the roots of the fiber polynomial and then return the associated models and sigma valuess
 metadata['fiber_polynomial'] = str(fiber_poly)
 
 L.<z>=fiber_poly.splitting_field()
@@ -120,13 +120,13 @@ for r in roots_data:
     #now we take the derivative of the fiber polynomial evaluated at our fixed model Atilde, Btilde
     fiber_poly_ddt = derivative(fiber_poly, t, 1); fiber_poly_ddt = fiber_poly_ddt(r);
     if fiber_poly_ddt == 0:
-    #If we found a root corresponding to multiple models we need to abort now because our later abscissa formula
+    #If we found a root corresponding to multiple models we need to abort now because our later sigma values formula
         #will involve division by 0
         """
-        In this case our formula for the abscissa fails but one can still use ELlipticCurveIsogeny(E, None, Etilde_r, l) to compute the isogeny. We make the abscissa None to indicate something went wrong
+        In this case our formula for sigma fails but one can still use ELlipticCurveIsogeny(E, None, Etilde_r, l) to compute the isogeny. We make the sigma value None to indicate something went wrong
         """
         phi = EllipticCurveIsogeny(E, None, Etilde_r, l)
-        datum['isogeny_abscissa'] = None
+        datum['sigma'] = None
         datum['isogeny_kernel_polynomial'] = phi.kernel_polynomial()
         isogeny_data[r] = datum
         continue
@@ -135,11 +135,11 @@ for r in roots_data:
     #now use Drew's formula to recover the absicca
     m1 = 18*B/A; n1 = j1prime/(1728-j1)
     m2 = r/j2; n2 = r/(1728-j2) 
-    abscissa = l * (log_deriv_diff/2 + (n1 - l*n2)/4 + (l*m2 - m1)/3 )
+    sigma = l * (log_deriv_diff/2 + (n1 - l*n2)/4 + (l*m2 - m1)/3 )
 
     #now use Fast Elkies to compute the kernel polynomial
-    kernel_poly = fast_elkies(E, Etilde_r, l, abscissa)
-    datum['abscissa'] = abscissa
+    kernel_poly = fast_elkies(E, Etilde_r, l, sigma)
+    datum['sigma'] = sigma
     datum['kernel_polynomial'] = str(kernel_poly)
 
     #assert that our algorithm worked

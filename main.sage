@@ -17,12 +17,21 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=None):
         A prime integer coprime to the characteristic of the field
     model : (A, B) tuple of Elements of a finite field or None.
         Optional parameter that lets the user give E1 a specific short Weierstrass model. 
+        If None, the algorithm will compute a short Weierstrass model for E1 itself.
+    mult : int or None
+        Optional parameter that lets the user give the multiplicity of the root (j1, j2) in the modular polynomial Phi_l(X,Y).
+        If None, the algorithm will compute the multiplicity itself.
 
     Returns
     -------
-    E1 : EllipticCurve
-        The first elliptic curve with j-invariant j1.
-    kernel_polynomials : list of kernel polynomials for all the l-isogenies from E1 to elliptic curves with j-invariant j2
+    isogeny_data : dict
+        A dictionary where each key is a root r of the fiber polynomial and each value is another dictionary with the following keys
+        'domain_curve': The elliptic curve E1 with j-invariant j1.
+        'codomain_curve': The elliptic curve E2 with j-invariant j2 corresponding to the root r.
+        'sigma': The sum of the x-coordinates of the affine points in the kernel of the isogeny
+        'kernel_polynomial': The kernel polynomial of the isogeny as a string.
+        'isogeny': The isogeny from E1 to E2 as an EllipticCurveIsogeny object.
+            If the algorithm fails to compute the isogeny for a particular root r (due to division by zero in the sigma formula), the value for 'isogeny', 'sigma', and 'kernel_polynomial' will be None.
 
     Raises
     ------
@@ -76,7 +85,7 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=None):
     Phi=classical_modular_polynomial(l)
     Phi=R(Phi)
 
-    #parameters for abscissa formula later
+    #parameters for sigma formula later
     mu1 = 18*B/A
     j1prime = mu1*j1 
     nu1 = mu1*j1/(1728-j1)
@@ -132,12 +141,12 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=None):
         #now we take the derivative of the fiber polynomial evaluated at our fixed model Atilde, Btilde
         fiber_poly_ddt = derivative(fiber_poly, t, 1); fiber_poly_ddt = fiber_poly_ddt(r);
         if fiber_poly_ddt == 0:
-        #If we found a root corresponding to multiple models we need to abort now because our later abscissa formula
+        #If we found a root corresponding to multiple models we need to abort now because our later sigma formula
             #will involve division by 0
             """
-            In this case our formula for the abscissa fails. We return a None type to indicate algorithm failure without quitting out completely
+            In this case our formula for sigma fails. We return a None type to indicate algorithm failure without quitting out completely
             """
-            datum['isogeny_abscissa'] = None
+            datum['sigma'] = None
             datum['isogeny_kernel_polynomial'] = None
             isogeny_data[r] = datum
             continue
@@ -145,13 +154,13 @@ def multipoint_isogeny(j1, j2, l, mult=None, model=None):
         log_deriv_diff = mult/r * fiber_function_multplus1/( binomial(mult+1, mult-1) * fiber_poly_ddt )
         #now use Drew's formula to recover the absicca
         mu2 = r/j2; nu2 = r/(1728-j2) 
-        # Abscissa formula of Sutherland from Steven Galbraith's ``Mathematics of Public Key Cryptography,''
+        # sigma formula of Sutherland from Steven Galbraith's ``Mathematics of Public Key Cryptography,''
         #Chapter 25, pg555 https://www.math.auckland.ac.nz/~sgal018/crypto-book/ch25.pdf
-        abscissa = l * (log_deriv_diff/2 + (nu1 - l*nu2)/4 + (l*mu2 - mu1)/3 )
+        sigma = l * (log_deriv_diff/2 + (nu1 - l*nu2)/4 + (l*mu2 - mu1)/3 )
 
         #now use Fast Elkies to compute the kernel polynomial
-        kernel_poly = fast_elkies(E, Etilde_r, l, abscissa)
-        datum['abscissa'] = abscissa
+        kernel_poly = fast_elkies(E, Etilde_r, l, sigma)
+        datum['sigma'] = sigma
         datum['kernel_polynomial'] = str(kernel_poly)
         phi = EllipticCurveIsogeny(E, kernel_poly)
         datum['isogeny']=phi

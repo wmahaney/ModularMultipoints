@@ -87,7 +87,7 @@ fiber_poly =0
 for u in range(0, mult+1):
    fiber_poly += binomial(mult,u) * l^(mult-u) * j1prime^u * derivative_evals[(u, mult-u)] * t^(mult-u)
 
-#get the roots of the fiber polynomial and then return the associated models and abscissas
+#get the roots of the fiber polynomial and then return the associated models and sigma valuess
 metadata['fiber_polynomial'] = str(fiber_poly)
 
 L.<z>=fiber_poly.splitting_field()
